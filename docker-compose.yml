@@ -1,0 +1,45 @@
+version: '3'
+services: 
+    domain-app:
+        build: ./domain
+        ports: 
+            - 9001:3000
+        volumes: 
+            - ./domain:/domain
+        depends_on: 
+            - domain-database
+        links: 
+            - domain-database
+
+    domain-database:
+        image: mongo:latest
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: rootpassword
+        volumes:
+            - mongodb_data_container_domain:/data/db
+
+    node_passport_login:
+        build: ./node_passport_login
+        ports: 
+            - 9002:3000
+        volumes: 
+            - ./node_passport_login:/node_passport_login
+        depends_on: 
+            - node_passport_login_database
+        links: 
+            - node_passport_login_database
+
+    node_passport_login_database:
+        image: mongo:latest
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: rootpassword
+        volumes:
+            - mongodb_data_container_node_passport_login:/data/db
+
+
+
+volumes: 
+    mongodb_data_container_domain:
+    mongodb_data_container_node_passport_login:
